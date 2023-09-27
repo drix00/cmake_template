@@ -29,13 +29,20 @@ add_test(NAME cli.has_help COMMAND intro --help)
 add_test(NAME cli.version_matches COMMAND intro --version)
 set_tests_properties(cli.version_matches PROPERTIES PASS_REGULAR_EXPRESSION "${PROJECT_VERSION}")
 
-add_executable(tests tests.cpp)
+add_executable(tests tests.cpp cli11_test.cpp spdlog_test.cpp
+        fmt_test.cpp h5pp_test.cpp)
 target_link_libraries(
   tests
   PRIVATE myproject::myproject_warnings
           myproject::myproject_options
           myproject::sample_library
-          Catch2::Catch2WithMain)
+          Catch2::Catch2WithMain
+          CLI11::CLI11
+          fmt::fmt
+          spdlog::spdlog
+          h5pp::h5pp
+)
+target_include_directories(tests PRIVATE "${CMAKE_BINARY_DIR}/configured_files/include")
 
 if(WIN32 AND BUILD_SHARED_LIBS)
   add_custom_command(
